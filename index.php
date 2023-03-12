@@ -1,3 +1,7 @@
+<?php
+require("login.php");
+//redirect to template page if the user is logged in
+?>
 <!DOCTYPE html>
 <html lang="en">
 
@@ -7,6 +11,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Hotel Booking</title>
     <!-- Main Project Css file -->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
     <link rel="stylesheet" href="css/hotel.css">
     <!-- Render All Elements Normally -->
     <link rel="stylesheet" href="css/normalize.css">
@@ -17,6 +22,30 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Work+Sans:wght@200;300;400;500;600;700;800&display=swap"
         rel="stylesheet">
+
+         <!-- Login script -->
+        <script>
+            $(document).ready(function() {
+                $("#login-form").submit(function(event) {
+                    event.preventDefault(); // Prevent default form submit action
+                    var username = $("#username").val();
+                    var password = $("#password").val();
+                    $.ajax({
+                        url: "login.php",
+                        method: "POST",
+                        data: { username: username, password: password },
+                        success: function(response) {
+                            if (response == "success") {
+                             header("Location: welcome.php"); // Redirect to main forum page                          
+                            } else {
+                                $("#error-message").html(response); // Display error message
+                            }
+                        }
+                    });
+                });
+            });
+        </script>
+    
 </head>
 
 <body>
@@ -73,13 +102,15 @@
     <!-- Start Form -->
     <div class="form">
         <div class="container">
-            <form action="" method="GET">
-                <h2>Sign in</h2>
-                <input class="input" type="text" required placeholder="Username" name="user">
-                <input class="input" type="password" required placeholder="Password" name="password" minlength="12"
-                    maxlength="22">
+        <form id="login-form" method="post">
+                <h1>Sign in</h1>
+            <input class="input" type="text" id="username" required placeholder="username" name="username">
+            <input class="input" type="password" id="password" required placeholder="password" name="password" minlength="12"
+                maxlength="22">
                 <input type="submit" value="Login">
+                <div id="error-message"></div> <!-- Display error message here -->  
             </form>
+          
         </div>
     </div>
     <!-- End Form -->
